@@ -1,3 +1,4 @@
+import axios from "axios";
 import { StatusBar } from "expo-status-bar";
 import React from "react";
 import {
@@ -18,6 +19,7 @@ export default function Login({ navigation }) {
   const [isPasswordValid, setIsPasswordValid] = React.useState(false);
   const [passwordErrorMessage, setpasswordErrorMessage] = React.useState(false);
 
+  const [token, setToken] = React.useState();
   const validateEmail = (email) => {
     const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     setIsEmailValid(regex.test(email));
@@ -27,8 +29,21 @@ export default function Login({ navigation }) {
     setIsPasswordValid(password.length >= 7);
   };
 
-  const handleLogin = () => {
-    if (isEmailValid && isPasswordValid) {
+  const handleLogin = async () => {
+    if (isEmailValid && password.length > 0) {
+      //console.log(axios.get("https://red-mountain-shop-backend.onrender.com"));
+      let ret = await axios
+        .post("https://red-mountain-shop-backend.onrender.com/login", {
+          email: email,
+          password: password,
+        })
+        .then((response) => {
+          setToken(response.data);
+          alert("Done");
+        })
+        .catch((error) => {
+          console.log(error);
+        });
     } else {
       alert("Please enter a valid email and password.");
     }

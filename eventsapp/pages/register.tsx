@@ -42,7 +42,7 @@ export default function Register({ navigation }) {
     }
   };
 
-  const handleLogin = async () => {
+  const handleRegister = async () => {
     if (isEmailValid && isPasswordValid) {
       //console.log(axios.get("https://red-mountain-shop-backend.onrender.com"));
 
@@ -115,7 +115,7 @@ export default function Register({ navigation }) {
         <TouchableOpacity onPress={() => alert("Sign up for an account.")}>
           <Text style={styles.textLink}>Don't have an account?</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={[styles.loginButton]} onPress={handleLogin}>
+        <TouchableOpacity style={[styles.loginButton]} onPress={handleRegister}>
           <Text style={[styles.loginButtonText]}>Register</Text>
         </TouchableOpacity>
       </View>
