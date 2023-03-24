@@ -9,6 +9,7 @@ import {
   Image,
   TouchableOpacity,
 } from "react-native";
+import { useDispatch } from "react-redux";
 
 export default function Login({ navigation }) {
   const [email, setEmail] = React.useState("");
@@ -18,7 +19,7 @@ export default function Login({ navigation }) {
   const [password, setPassword] = React.useState("");
   const [isPasswordValid, setIsPasswordValid] = React.useState(false);
   const [passwordErrorMessage, setpasswordErrorMessage] = React.useState(false);
-
+  const dispatch = useDispatch();
   const [token, setToken] = React.useState();
   const validateEmail = (email) => {
     const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -31,15 +32,20 @@ export default function Login({ navigation }) {
 
   const handleLogin = async () => {
     if (isEmailValid && password.length > 0) {
-      //console.log(axios.get("https://red-mountain-shop-backend.onrender.com"));
+      console.log("xd");
       let ret = await axios
         .post("https://red-mountain-shop-backend.onrender.com/login", {
           email: email,
           password: password,
         })
         .then((response) => {
-          setToken(response.data);
-          alert("Done");
+          console.log("xd3");
+          let token = JSON.stringify(response.data);
+          console.log(token);
+        })
+        .then(() => {
+          dispatch({ type: "setToken", payload: token });
+          navigation.navigate("SplashScreen");
         })
         .catch((error) => {
           console.log(error);

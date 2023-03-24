@@ -44,8 +44,6 @@ export default function Register({ navigation }) {
 
   const handleRegister = async () => {
     if (isEmailValid && isPasswordValid) {
-      //console.log(axios.get("https://red-mountain-shop-backend.onrender.com"));
-
       let ret = await axios
         .post("https://red-mountain-shop-backend.onrender.com/register", {
           email: email,

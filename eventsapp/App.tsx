@@ -6,18 +6,19 @@ import { StyleSheet, Text, View } from "react-native";
 import Login from "./pages/login";
 import Register from "./pages/register";
 import SplashScreen from "./pages/splashScreen";
+import { store } from "./redux/store";
+import { Provider } from "react-redux";
 const Stack = createNativeStackNavigator();
 export default function App() {
   return (
-    // <View style={styles.container}>
-    //   <Register />
-    // </View>
-    <NavigationContainer>
-      <Stack.Navigator>
-        <Stack.Screen name="splashScreen" component={SplashScreen} />
-        <Stack.Screen name="Login" component={Login} />
-        <Stack.Screen name="Register" component={Register} />
-      </Stack.Navigator>
-    </NavigationContainer>
+    <Provider store={store}>
+      <NavigationContainer>
+        <Stack.Navigator>
+          <Stack.Screen name="SplashScreen" component={SplashScreen} />
+          <Stack.Screen name="Login" component={Login} />
+          <Stack.Screen name="Register" component={Register} />
+        </Stack.Navigator>
+      </NavigationContainer>
+    </Provider>
   );
 }
