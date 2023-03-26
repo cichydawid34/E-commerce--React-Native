@@ -1,13 +1,15 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
-interface TokenState {
+interface userState {
   token: string | null;
+  loading: boolean;
 }
-const tokenSlice = createSlice({
-  name: "token",
+const userSlice = createSlice({
+  name: "user",
   initialState: {
     token: null,
-  } as TokenState,
+    loading: false,
+  } as userState,
   reducers: {
     setToken(state, action: PayloadAction<string>) {
       state.token = action.payload;
@@ -17,5 +19,5 @@ const tokenSlice = createSlice({
     },
   },
 });
-export const { setToken, removeToken } = tokenSlice.actions;
-export default tokenSlice.reducer;
+export const { setToken, removeToken } = userSlice.actions;
+export default userSlice.reducer;

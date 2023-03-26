@@ -6,10 +6,10 @@ import Login from "../pages/login";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../redux/store";
 import { removeToken, setToken } from "../redux/userSlice";
-export default function SplashScreen() {
+export default function MainScreen() {
   return (
     <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
-      <Text>XDDDD</Text>
+      <Text>Main</Text>
     </View>
   );
 }

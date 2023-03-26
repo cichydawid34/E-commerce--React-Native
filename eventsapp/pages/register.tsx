@@ -1,6 +1,7 @@
 import axios from "axios";
 import { StatusBar } from "expo-status-bar";
 import React, { useEffect, useState } from "react";
+import Toast from "react-native-toast-message";
 import {
   Text,
   StyleSheet,
@@ -53,10 +54,19 @@ export default function Register({ navigation }) {
           setToken(response.data);
         })
         .then(() => {
-          navigation.navigate("Login");
+          Toast.show({
+            type: "success",
+            text1: "Succes",
+            text2: "You have succesfully created an account👋",
+          });
         })
         .catch((error) => {
-          console.log(error);
+          Toast.show({
+            type: "error",
+            text1: "Error",
+            text2: `There was a problem with creating an account ${error.message} `,
+          });
+          console.log(error.message);
         });
     } else {
       alert("Please enter a valid email and password.");
@@ -64,61 +74,72 @@ export default function Register({ navigation }) {
   };
 
   return (
-    <View style={styles.container}>
-      <Image
-        style={styles.image}
-        source={require("../assets/registerImage.png")}
-      />
-      <View style={styles.formContainer}>
-        <Text style={styles.textHeader}>Register</Text>
-
-        <TextInput
-          style={[
-            styles.input,
-            !isEmailValid && email.length > 0 && styles.invalidInput,
-          ]}
-          placeholder="email"
-          onChangeText={(text) => {
-            setEmail(text);
-            validateEmail(text);
-          }}
-          value={email}
-          autoCapitalize="none"
-          keyboardType="email-address"
+    <>
+      <View style={styles.container}>
+        <Image
+          style={styles.image}
+          source={require("../assets/registerImage.png")}
         />
-        {emailErrorMessage ? (
-          <Text style={styles.errorMessage}>{emailErrorMessage}</Text>
-        ) : null}
+        <View style={styles.formContainer}>
+          <Text style={styles.textHeader}>Register</Text>
 
-        <TextInput
-          style={[
-            styles.input,
-            !isPasswordValid && password.length > 0 && styles.invalidInput,
-          ]}
-          onChangeText={(text) => {
-            setPassword(text);
-            validatePassword(text);
-          }}
-          value={password}
-          placeholder="password"
-          secureTextEntry={true}
-        />
+          <TextInput
+            style={[
+              styles.input,
+              !isEmailValid && email.length > 0 && styles.invalidInput,
+            ]}
+            placeholder="email"
+            onChangeText={(text) => {
+              setEmail(text);
+              validateEmail(text);
+            }}
+            value={email}
+            autoCapitalize="none"
+            keyboardType="email-address"
+          />
+          {emailErrorMessage ? (
+            <Text style={styles.errorMessage}>{emailErrorMessage}</Text>
+          ) : null}
 
-        {passwordErrorMessage ? (
-          <Text style={styles.errorMessage}>{passwordErrorMessage}</Text>
-        ) : null}
-        <TouchableOpacity onPress={() => alert("Forgot password?")}>
-          <Text style={styles.textLink}>Forgot password?</Text>
-        </TouchableOpacity>
-        <TouchableOpacity onPress={() => alert("Sign up for an account.")}>
-          <Text style={styles.textLink}>Don't have an account?</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={[styles.loginButton]} onPress={handleRegister}>
-          <Text style={[styles.loginButtonText]}>Register</Text>
-        </TouchableOpacity>
+          <TextInput
+            style={[
+              styles.input,
+              !isPasswordValid && password.length > 0 && styles.invalidInput,
+            ]}
+            onChangeText={(text) => {
+              setPassword(text);
+              validatePassword(text);
+            }}
+            value={password}
+            placeholder="password"
+            secureTextEntry={true}
+          />
+
+          {passwordErrorMessage ? (
+            <Text style={styles.errorMessage}>{passwordErrorMessage}</Text>
+          ) : null}
+          <TouchableOpacity onPress={() => alert("Forgot password?")}>
+            <Text style={styles.textLink}>Forgot password?</Text>
+          </TouchableOpacity>
+          <TouchableOpacity onPress={() => alert("Sign up for an account.")}>
+            <Text
+              style={styles.textLink}
+              onPress={() => navigation.navigate("Login")}
+            >
+              Already have an account?
+            </Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={[styles.loginButton]}
+            onPress={handleRegister}
+          >
+            <Text style={[styles.loginButtonText]}>Register</Text>
+          </TouchableOpacity>
+        </View>
+        <StatusBar style="auto" />
       </View>
-      <StatusBar style="auto" />
-    </View>
+      <Toast />
+    </>
   );
 }
 

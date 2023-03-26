@@ -8,8 +8,12 @@ import {
   View,
   Image,
   TouchableOpacity,
+  Button,
 } from "react-native";
-import { useDispatch } from "react-redux";
+import Toast from "react-native-toast-message";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "../redux/store";
+import { setToken } from "../redux/userSlice";
 
 export default function Login({ navigation }) {
   const [email, setEmail] = React.useState("");
@@ -20,36 +24,36 @@ export default function Login({ navigation }) {
   const [isPasswordValid, setIsPasswordValid] = React.useState(false);
   const [passwordErrorMessage, setpasswordErrorMessage] = React.useState(false);
   const dispatch = useDispatch();
-  const [token, setToken] = React.useState();
+
   const validateEmail = (email) => {
     const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     setIsEmailValid(regex.test(email));
   };
 
   const validatePassword = (password) => {
-    setIsPasswordValid(password.length >= 7);
+    setIsPasswordValid(password.length > 0);
   };
 
   const handleLogin = async () => {
+    console.log("xd");
     if (isEmailValid && password.length > 0) {
-      console.log("xd");
-      let ret = await axios
-        .post("https://red-mountain-shop-backend.onrender.com/login", {
-          email: email,
-          password: password,
-        })
-        .then((response) => {
-          console.log("xd3");
-          let token = JSON.stringify(response.data);
-          console.log(token);
-        })
-        .then(() => {
-          dispatch({ type: "setToken", payload: token });
-          navigation.navigate("SplashScreen");
-        })
-        .catch((error) => {
-          console.log(error);
+      try {
+        let token = await axios.post(
+          "https://red-mountain-shop-backend.onrender.com/login",
+          {
+            email: email,
+            password: password,
+          }
+        );
+        dispatch(setToken(token.data));
+      } catch (error) {
+        Toast.show({
+          type: "error",
+          text1: "Error",
+          text2: `There was a problem with log in ${error.message} `,
         });
+        console.log(error.message);
+      }
     } else {
       alert("Please enter a valid email and password.");
     }
@@ -57,12 +61,15 @@ export default function Login({ navigation }) {
 
   return (
     <View style={styles.container}>
+      {/* Logo Image */}
       <Image
         style={styles.image}
         source={require("../assets/loginImage.png")}
       />
       <View style={styles.formContainer}>
         <Text style={styles.textHeader}>Sign in</Text>
+
+        {/* Email input */}
         <TextInput
           style={[
             styles.input,
@@ -77,9 +84,13 @@ export default function Login({ navigation }) {
           autoCapitalize="none"
           keyboardType="email-address"
         />
-        {!isEmailValid ? (
+
+        {/* Email error message */}
+        {!isEmailValid && email.length > 0 ? (
           <Text style={styles.errorMessage}>Email is invalid</Text>
         ) : null}
+
+        {/* Password input */}
         <TextInput
           style={[
             styles.input,
@@ -96,8 +107,13 @@ export default function Login({ navigation }) {
         <TouchableOpacity onPress={() => alert("Forgot password?")}>
           <Text style={styles.textLink}>Forgot password?</Text>
         </TouchableOpacity>
-        <TouchableOpacity onPress={() => alert("Sign up for an account.")}>
-          <Text style={styles.textLink}>Don't have an account?</Text>
+        <TouchableOpacity onPress={() => navigation.navigate("Register")}>
+          <Text
+            style={styles.textLink}
+            onPress={() => navigation.navigate("Register")}
+          >
+            Don't have an account?
+          </Text>
         </TouchableOpacity>
         <TouchableOpacity
           style={[styles.loginButton]}
@@ -108,10 +124,12 @@ export default function Login({ navigation }) {
         </TouchableOpacity>
       </View>
       <StatusBar style="auto" />
+      <Toast />
     </View>
   );
 }
 
+//Styling
 const styles = StyleSheet.create({
   container: {
     width: "100%",

@@ -5,6 +5,7 @@ import React from "react";
 import { StyleSheet, Text, View } from "react-native";
 import Login from "./pages/login";
 import Register from "./pages/register";
+import Navigator from "./pages/navigator";
 import SplashScreen from "./pages/splashScreen";
 import { store } from "./redux/store";
 import { Provider } from "react-redux";
@@ -13,11 +14,7 @@ export default function App() {
   return (
     <Provider store={store}>
       <NavigationContainer>
-        <Stack.Navigator>
-          <Stack.Screen name="SplashScreen" component={SplashScreen} />
-          <Stack.Screen name="Login" component={Login} />
-          <Stack.Screen name="Register" component={Register} />
-        </Stack.Navigator>
+        <Navigator />
       </NavigationContainer>
     </Provider>
   );
