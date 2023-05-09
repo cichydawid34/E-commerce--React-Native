@@ -1,6 +1,6 @@
 import * as React from "react";
-import { Button, View, Text } from "react-native";
-import { NavigationContainer } from "@react-navigation/native";
+import { Button, View, Text, Image } from "react-native";
+import { NavigationContainer, useIsFocused } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import Login from "../pages/login";
 import { useDispatch, useSelector } from "react-redux";
@@ -12,6 +12,18 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import SplashScreen from "./splashScreen";
 import MainScreen from "./main";
 import MapScreen from "./map";
+
+function CustomTabBarIcon({ image, focused }) {
+  const isFocused = useIsFocused();
+
+  return (
+    <Image
+      source={{ uri: image }}
+      style={{ width: isFocused ? 32 : 24, height: isFocused ? 32 : 24 }}
+    />
+  );
+}
+
 export default function Navigator() {
   const dispatch = useDispatch();
 
@@ -20,7 +32,7 @@ export default function Navigator() {
 
   return (
     <>
-      {token == null ? (
+      {token != null ? (
         // No token found, user isn't signed in
         <Stack.Navigator
           screenOptions={{
@@ -32,26 +44,65 @@ export default function Navigator() {
             component={Login}
             options={{
               title: "Sign in",
-              // When logging out, a pop animation feels intuitive
-              // You can remove this if you want the default 'push' animation
             }}
           />
           <Stack.Screen
             name="Register"
             component={Register}
             options={{
-              title: "Sign in",
-              // When logging out, a pop animation feels intuitive
-              // You can remove this if you want the default 'push' animation
+              title: "Register",
             }}
           />
         </Stack.Navigator>
       ) : (
-        <Tab.Navigator>
-          {/* // User is signed in */}
-          <Tab.Screen name="SplashScr" component={SplashScreen} />
-          <Tab.Screen name="Main" component={MainScreen} />
-          <Tab.Screen name="Map" component={MapScreen} />
+        <Tab.Navigator
+          screenOptions={{
+            tabBarShowLabel: false,
+            headerShown: false,
+          }}
+        >
+          <Tab.Screen
+            name="SplashScr"
+            component={SplashScreen}
+            options={{
+              tabBarIcon: ({ focused }) => (
+                <CustomTabBarIcon
+                  image={
+                    "https://cdn-icons-png.flaticon.com/512/3884/3884339.png"
+                  }
+                  focused={focused}
+                />
+              ),
+            }}
+          />
+          <Tab.Screen
+            name="Main"
+            component={MainScreen}
+            options={{
+              tabBarIcon: ({ focused }) => (
+                <CustomTabBarIcon
+                  image={
+                    "https://cdn-icons-png.flaticon.com/512/3884/3884324.png"
+                  }
+                  focused={focused}
+                />
+              ),
+            }}
+          />
+          <Tab.Screen
+            name="Map"
+            component={MapScreen}
+            options={{
+              tabBarIcon: ({ focused }) => (
+                <CustomTabBarIcon
+                  image={
+                    "https://cdn-icons-png.flaticon.com/512/3884/3884303.png"
+                  }
+                  focused={focused}
+                />
+              ),
+            }}
+          />
         </Tab.Navigator>
       )}
     </>

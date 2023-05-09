@@ -9,12 +9,14 @@ import {
   View,
   Image,
   TouchableOpacity,
+  ActivityIndicator,
 } from "react-native";
 
 export default function Register({ navigation }) {
   const [email, setEmail] = React.useState("");
   const [isEmailValid, setIsEmailValid] = React.useState(false);
   const [emailErrorMessage, setEmailErrorMessage] = React.useState("");
+  const [isLoading, setIsLoading] = React.useState(false);
 
   const [password, setPassword] = React.useState("");
   const [isPasswordValid, setIsPasswordValid] = React.useState(false);
@@ -44,30 +46,57 @@ export default function Register({ navigation }) {
   };
 
   const handleRegister = async () => {
+    console.log("isEmailValid:", isEmailValid);
+    console.log("isPasswordValid:", isPasswordValid);
     if (isEmailValid && isPasswordValid) {
-      let ret = await axios
-        .post("https://red-mountain-shop-backend.onrender.com/register", {
-          email: email,
-          password: password,
-        })
-        .then((response) => {
-          setToken(response.data);
-        })
-        .then(() => {
-          Toast.show({
-            type: "success",
-            text1: "Succes",
-            text2: "You have succesfully created an account👋",
-          });
-        })
-        .catch((error) => {
-          Toast.show({
-            type: "error",
-            text1: "Error",
-            text2: `There was a problem with creating an account ${error.message} `,
-          });
-          console.log(error.message);
+      try {
+        console.log("starte");
+        setIsLoading(true);
+        console.log("email:", email);
+        console.log("password:", password);
+
+        let ret = await fetch(
+          "https://red-mountain-shop-backend.onrender.com/register",
+          {
+            headers: {
+              Accept: "application/json",
+              "Content-Type": "application/json",
+            },
+            method: "POST",
+            body: JSON.stringify({
+              email: email,
+              password: password,
+            }),
+          }
+        );
+        console.log("return:", ret);
+        setToken(ret);
+        // .then((response) => {
+        //   console.log(response);
+        //   setToken(response.data);
+        //   console.log("tokenSet");
+        // })
+        // .then(() => {
+        //   Toast.show({
+        //     type: "success",
+        //     text1: "Succes",
+        //     text2: "You have succesfully created an account👋",
+        //   });
+        // })
+        // .catch((error) => {
+        //   console.error(error);
+        // });
+      } catch (error: any) {
+        console.log("error");
+        Toast.show({
+          type: "error",
+          text1: "Error",
+          text2: `${error.message} `,
         });
+        console.log(error.message);
+      } finally {
+        setIsLoading(false);
+      }
     } else {
       alert("Please enter a valid email and password.");
     }
@@ -132,8 +161,13 @@ export default function Register({ navigation }) {
           <TouchableOpacity
             style={[styles.loginButton]}
             onPress={handleRegister}
+            disabled={!isEmailValid || !isPasswordValid || isLoading}
           >
-            <Text style={[styles.loginButtonText]}>Register</Text>
+            {isLoading ? (
+              <ActivityIndicator size="small" color="white" />
+            ) : (
+              <Text style={styles.textButton}>Register</Text>
+            )}
           </TouchableOpacity>
         </View>
         <StatusBar style="auto" />
@@ -209,6 +243,11 @@ const styles = StyleSheet.create({
     color: "white",
     fontSize: 16,
     textAlign: "center",
+    fontWeight: "bold",
+  },
+  textButton: {
+    color: "white",
+    fontSize: 16,
     fontWeight: "bold",
   },
   errorMessage: {

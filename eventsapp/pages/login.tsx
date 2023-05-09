@@ -1,5 +1,6 @@
 import axios from "axios";
 import { StatusBar } from "expo-status-bar";
+
 import React from "react";
 import {
   StyleSheet,
@@ -9,6 +10,7 @@ import {
   Image,
   TouchableOpacity,
   Button,
+  ActivityIndicator,
 } from "react-native";
 import Toast from "react-native-toast-message";
 import { useDispatch, useSelector } from "react-redux";
@@ -19,7 +21,7 @@ export default function Login({ navigation }) {
   const [email, setEmail] = React.useState("");
   const [isEmailValid, setIsEmailValid] = React.useState(false);
   const [emailErrorMessage, setemailErrorMessage] = React.useState(false);
-
+  const [isLoading, setIsLoading] = React.useState(false);
   const [password, setPassword] = React.useState("");
   const [isPasswordValid, setIsPasswordValid] = React.useState(false);
   const [passwordErrorMessage, setpasswordErrorMessage] = React.useState(false);
@@ -38,6 +40,7 @@ export default function Login({ navigation }) {
     console.log("xd");
     if (isEmailValid && password.length > 0) {
       try {
+        setIsLoading(true);
         let token = await axios.post(
           "https://red-mountain-shop-backend.onrender.com/login",
           {
@@ -50,9 +53,11 @@ export default function Login({ navigation }) {
         Toast.show({
           type: "error",
           text1: "Error",
-          text2: `There was a problem with log in ${error.message} `,
+          text2: `${error.message} `,
         });
         console.log(error.message);
+      } finally {
+        setIsLoading(false);
       }
     } else {
       alert("Please enter a valid email and password.");
@@ -84,7 +89,6 @@ export default function Login({ navigation }) {
           autoCapitalize="none"
           keyboardType="email-address"
         />
-
         {/* Email error message */}
         {!isEmailValid && email.length > 0 ? (
           <Text style={styles.errorMessage}>Email is invalid</Text>
@@ -118,9 +122,13 @@ export default function Login({ navigation }) {
         <TouchableOpacity
           style={[styles.loginButton]}
           onPress={handleLogin}
-          disabled={!isEmailValid || !isPasswordValid}
+          disabled={!isEmailValid || !isPasswordValid || isLoading}
         >
-          <Text>Login</Text>
+          {isLoading ? (
+            <ActivityIndicator size="small" color="white" />
+          ) : (
+            <Text style={styles.textButton}>Login</Text>
+          )}
         </TouchableOpacity>
       </View>
       <StatusBar style="auto" />
@@ -173,17 +181,19 @@ const styles = StyleSheet.create({
     height: 270,
   },
   loginButton: {
-    color: "white",
-    fontSize: 16,
     borderColor: "red",
     borderWidth: 2,
-    padding: 4,
-    paddingHorizontal: 26,
+    padding: 7,
+    paddingHorizontal: 56,
     textAlign: "center",
-    backgroundColor: "lightcoral",
+    backgroundColor: "indianred",
     borderRadius: 4,
-    fontWeight: "bold",
     marginTop: 10,
+  },
+  textButton: {
+    color: "white",
+    fontSize: 16,
+    fontWeight: "bold",
   },
   errorMessage: {
     color: "red",
