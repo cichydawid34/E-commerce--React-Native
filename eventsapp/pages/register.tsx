@@ -55,37 +55,32 @@ export default function Register({ navigation }) {
         console.log("email:", email);
         console.log("password:", password);
 
-        let ret = await fetch(
-          "https://red-mountain-shop-backend.onrender.com/register",
-          {
-            headers: {
-              Accept: "application/json",
-              "Content-Type": "application/json",
-            },
-            method: "POST",
-            body: JSON.stringify({
-              email: email,
-              password: password,
-            }),
-          }
-        );
-        console.log("return:", ret);
-        setToken(ret);
-        // .then((response) => {
-        //   console.log(response);
-        //   setToken(response.data);
-        //   console.log("tokenSet");
-        // })
-        // .then(() => {
-        //   Toast.show({
-        //     type: "success",
-        //     text1: "Succes",
-        //     text2: "You have succesfully created an account👋",
-        //   });
-        // })
-        // .catch((error) => {
-        //   console.error(error);
-        // });
+        let ret = await fetch("http://10.0.2.2:9090/users/create", {
+          headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json",
+          },
+          method: "POST",
+          body: JSON.stringify({
+            email: email,
+            password: password,
+          }),
+        })
+          .then((response: any) => {
+            console.log(response);
+            setToken(response.data);
+            console.log("tokenSet");
+          })
+          .then(() => {
+            Toast.show({
+              type: "success",
+              text1: "Succes",
+              text2: "You have succesfully created an account👋",
+            });
+          })
+          .catch((error) => {
+            console.error(error);
+          });
       } catch (error: any) {
         console.log("error");
         Toast.show({

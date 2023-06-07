@@ -7,27 +7,31 @@ import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../redux/store";
 import { removeToken, setToken } from "../redux/userSlice";
 import MapView, { Marker } from "react-native-maps";
+
 export default function MapScreen() {
-  let pins = [
-    {
-      name: "The Cure",
-      lat: 50.06465,
-      lon: 19.94498,
-      genre: "koncert",
-    },
-    {
-      name: "Pod Mostem",
-      lat: 50.012101,
-      lon: 20.985841,
-      genre: "koncert",
-    },
-    {
-      name: "Biegi 'Przełaj'",
-      lat: 52.237049,
-      lon: 21.017532,
-      genre: "Maraton",
-    },
-  ];
+  const [pins, setPins] = React.useState([]);
+
+  React.useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await fetch("http://10.0.2.2:9090/events", {
+          headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json",
+          },
+          method: "GET",
+        });
+        const data = await response.json();
+        console.log("Fetched data:", data.events);
+        setPins(data.events);
+      } catch (error) {
+        console.error("Error fetching pins:", error);
+      }
+    };
+
+    fetchData();
+  }, []);
+
   return (
     <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
       <Text>Mapa</Text>
@@ -43,7 +47,11 @@ export default function MapScreen() {
         {pins.map((pin) => {
           return (
             <Marker
-              coordinate={{ latitude: pin.lat, longitude: pin.lon }}
+              key={pin._id}
+              coordinate={{
+                latitude: pin.latitude,
+                longitude: pin.longtitude,
+              }}
               title={pin.name}
               description={pin.genre}
             />
