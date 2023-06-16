@@ -12,8 +12,6 @@ import SearchBar from "../components/mainSearchBar";
 export default function MainScreen() {
   return (
     <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
-      <Text>Main</Text>
-      <SearchBar />
       <MainHeader />
     </View>
   );

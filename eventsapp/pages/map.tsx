@@ -10,7 +10,7 @@ import MapView, { Marker } from "react-native-maps";
 
 export default function MapScreen() {
   const [pins, setPins] = React.useState([]);
-
+  const token = useSelector((state) => state.user.token);
   React.useEffect(() => {
     const fetchData = async () => {
       try {
@@ -18,6 +18,7 @@ export default function MapScreen() {
           headers: {
             Accept: "application/json",
             "Content-Type": "application/json",
+            "x-access-token": token,
           },
           method: "GET",
         });
@@ -34,7 +35,6 @@ export default function MapScreen() {
 
   return (
     <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
-      <Text>Mapa</Text>
       <MapView
         style={styles.map}
         initialRegion={{

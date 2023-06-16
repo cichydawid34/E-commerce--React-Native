@@ -37,18 +37,15 @@ export default function Login({ navigation }) {
   };
 
   const handleLogin = async () => {
-    console.log("xd");
     if (isEmailValid && password.length > 0) {
       try {
         setIsLoading(true);
-        let token = await axios.post(
-          "http://localhost:9090/users/647b25da0c40d27ae62a91d6",
-          {
-            email: email,
-            password: password,
-          }
-        );
-        dispatch(setToken(token.data));
+        let token = await axios.post("http://10.0.2.2:9090/login", {
+          email: email,
+          password: password,
+        });
+
+        dispatch(setToken(token.data.token));
       } catch (error) {
         Toast.show({
           type: "error",

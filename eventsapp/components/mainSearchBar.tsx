@@ -29,7 +29,7 @@ export default function SearchBar() {
 
 const styles = StyleSheet.create({
   container: {
-    width: "80%",
+    width: "70%",
     flexDirection: "row",
     justifyContent: "center",
     alignItems: "center",

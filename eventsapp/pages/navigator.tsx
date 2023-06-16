@@ -12,6 +12,7 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import SplashScreen from "./splashScreen";
 import MainScreen from "./main";
 import MapScreen from "./map";
+import EventDetails from "./eventDetails";
 
 function CustomTabBarIcon({ image, focused }) {
   const isFocused = useIsFocused();
@@ -24,6 +25,23 @@ function CustomTabBarIcon({ image, focused }) {
   );
 }
 
+function MainStackScreen() {
+  return (
+    <Stack.Navigator
+      screenOptions={{
+        headerShown: false,
+      }}
+    >
+      <Stack.Screen
+        name="Main"
+        component={MainScreen}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen name="EventDetails" component={EventDetails} />
+    </Stack.Navigator>
+  );
+}
+
 export default function Navigator() {
   const dispatch = useDispatch();
 
@@ -32,8 +50,9 @@ export default function Navigator() {
 
   return (
     <>
-      {token != null ? (
+      {token == null ? (
         // No token found, user isn't signed in
+
         <Stack.Navigator
           screenOptions={{
             headerShown: false,
@@ -77,7 +96,7 @@ export default function Navigator() {
           />
           <Tab.Screen
             name="Main"
-            component={MainScreen}
+            component={MainStackScreen}
             options={{
               tabBarIcon: ({ focused }) => (
                 <CustomTabBarIcon
