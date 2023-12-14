@@ -1,16 +1,16 @@
-import axios from "axios";
 import { StatusBar } from "expo-status-bar";
-import React, { useEffect, useState } from "react";
+import React from "react";
 import Toast from "react-native-toast-message";
+import { styles } from "./registerStyle";
 import {
-  Text,
-  StyleSheet,
-  TextInput,
-  View,
-  Image,
-  TouchableOpacity,
   ActivityIndicator,
+  Image,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
 } from "react-native";
+import { RegisterUser } from "../../services/userSevice";
 
 export default function Register({ navigation }) {
   const [email, setEmail] = React.useState("");
@@ -22,10 +22,9 @@ export default function Register({ navigation }) {
   const [isPasswordValid, setIsPasswordValid] = React.useState(false);
   const [passwordErrorMessage, setPasswordErrorMessage] = React.useState("");
 
-  const [token, setToken] = useState(null);
-
-  const validateEmail = (email) => {
-    const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  //Email validation
+  const validateEmail = (email: string): void => {
+    const regex: RegExp = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (regex.test(email)) {
       setIsEmailValid(true);
       setEmailErrorMessage(null);
@@ -35,7 +34,8 @@ export default function Register({ navigation }) {
     }
   };
 
-  const validatePassword = (password) => {
+  //Password validation
+  const validatePassword = (password: string): void => {
     if (password.length >= 7) {
       setIsPasswordValid(true);
       setPasswordErrorMessage(null);
@@ -45,54 +45,42 @@ export default function Register({ navigation }) {
     }
   };
 
-  const handleRegister = async () => {
+  const handleRegister = async (): Promise<void> => {
     console.log("isEmailValid:", isEmailValid);
     console.log("isPasswordValid:", isPasswordValid);
-    if (isEmailValid && isPasswordValid) {
+    if (isEmailValid && isPasswordValid)
       try {
-        console.log("starte");
+        console.log("start register");
         setIsLoading(true);
         console.log("email:", email);
         console.log("password:", password);
 
-        let ret = await fetch("http://10.0.2.2:9090/users/create", {
-          headers: {
-            Accept: "application/json",
-            "Content-Type": "application/json",
-          },
-          method: "POST",
-          body: JSON.stringify({
-            email: email,
-            password: password,
-          }),
-        })
+        await RegisterUser(email, password)
           .then((response: any) => {
-            console.log(response);
-            setToken(response.data);
-            console.log("tokenSet");
+            console.log("Register Response: " + response);
           })
           .then(() => {
             Toast.show({
               type: "success",
-              text1: "Succes",
-              text2: "You have succesfully created an account👋",
+              text1: "Success",
+              text2: "You have successfully created an account👋",
             });
           })
           .catch((error) => {
             console.error(error);
           });
       } catch (error: any) {
-        console.log("error");
+        console.log("Register error: " + error);
         Toast.show({
           type: "error",
           text1: "Error",
-          text2: `${error.message} `,
+          text2: `${error} `,
         });
-        console.log(error.message);
+        console.log(error);
       } finally {
         setIsLoading(false);
       }
-    } else {
+    else {
       alert("Please enter a valid email and password.");
     }
   };
@@ -102,7 +90,7 @@ export default function Register({ navigation }) {
       <View style={styles.container}>
         <Image
           style={styles.image}
-          source={require("../assets/registerImage.png")}
+          source={require("../../assets/registerImage.png")}
         />
         <View style={styles.formContainer}>
           <Text style={styles.textHeader}>Register</Text>
@@ -113,7 +101,7 @@ export default function Register({ navigation }) {
               !isEmailValid && email.length > 0 && styles.invalidInput,
             ]}
             placeholder="email"
-            onChangeText={(text) => {
+            onChangeText={(text: string): void => {
               setEmail(text);
               validateEmail(text);
             }}
@@ -130,7 +118,7 @@ export default function Register({ navigation }) {
               styles.input,
               !isPasswordValid && password.length > 0 && styles.invalidInput,
             ]}
-            onChangeText={(text) => {
+            onChangeText={(text: string): void => {
               setPassword(text);
               validatePassword(text);
             }}
@@ -171,83 +159,3 @@ export default function Register({ navigation }) {
     </>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    width: "100%",
-    height: "100%",
-    flex: 1,
-    backgroundColor: "#fff",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  formContainer: {
-    width: 300,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  textHeader: {
-    fontSize: 30,
-    fontWeight: "bold",
-    marginBottom: 20,
-  },
-  textLabel: {
-    fontSize: 15,
-    fontWeight: "bold",
-    color: "grey",
-    marginRight: "auto",
-    marginLeft: 12,
-  },
-  textLink: {
-    marginTop: 10,
-    fontSize: 14,
-    color: "#0080ff",
-  },
-  input: {
-    height: 50,
-    width: 300,
-    margin: 10,
-    marginBottom: 0,
-    paddingLeft: 20,
-    borderWidth: 1,
-    borderRadius: 10,
-    borderColor: "#ccc",
-    fontSize: 16,
-  },
-  invalidInput: {
-    borderColor: "red",
-  },
-  image: {
-    width: 270,
-    height: 270,
-  },
-  loginButton: {
-    color: "white",
-    fontSize: 16,
-    borderColor: "red",
-    borderWidth: 2,
-    padding: 7,
-    paddingHorizontal: 56,
-    textAlign: "center",
-    backgroundColor: "indianred",
-    borderRadius: 4,
-    fontWeight: "bold",
-    marginTop: 10,
-  },
-  loginButtonText: {
-    color: "white",
-    fontSize: 16,
-    textAlign: "center",
-    fontWeight: "bold",
-  },
-  textButton: {
-    color: "white",
-    fontSize: 16,
-    fontWeight: "bold",
-  },
-  errorMessage: {
-    color: "red",
-    textAlign: "right",
-    marginLeft: "auto",
-  },
-});

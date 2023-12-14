@@ -1,18 +1,20 @@
 import * as React from "react";
-import { Button, View, Text, Image } from "react-native";
-import { NavigationContainer, useIsFocused } from "@react-navigation/native";
+import { Image } from "react-native";
+import { useIsFocused } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import Login from "../pages/login";
+import Login from "./login/login";
+import Register from "./register/register";
+import SplashScreen from "./splashScreen";
+import MainScreen from "./main/main";
+import MapScreen from "./map/map";
+import EventDetails from "./eventDetails/eventDetails";
+
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../redux/store";
-import { removeToken, setToken } from "../redux/userSlice";
-const Stack = createNativeStackNavigator();
-import Register from "./register";
+
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import SplashScreen from "./splashScreen";
-import MainScreen from "./main";
-import MapScreen from "./map";
-import EventDetails from "./eventDetails";
+
+const Stack = createNativeStackNavigator();
 
 function CustomTabBarIcon({ image, focused }) {
   const isFocused = useIsFocused();
@@ -50,9 +52,8 @@ export default function Navigator() {
 
   return (
     <>
-      {token == null ? (
-        // No token found, user isn't signed in
-
+      {token != null ? (
+        // No token found
         <Stack.Navigator
           screenOptions={{
             headerShown: false,

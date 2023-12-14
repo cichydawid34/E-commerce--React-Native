@@ -9,7 +9,7 @@ import { Provider } from "react-redux";
 import configureStore from "redux-mock-store";
 import "@testing-library/jest-dom";
 
-import Login from "../pages/login";
+import Login from "../pages/login/login";
 
 const mockStore = configureStore([]);
 

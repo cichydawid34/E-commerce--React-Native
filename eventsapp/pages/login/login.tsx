@@ -1,61 +1,59 @@
-import axios from "axios";
 import { StatusBar } from "expo-status-bar";
-
+import { styles } from "./loginStyles";
 import React from "react";
+import { LoginUser } from "../../services/userSevice";
 import {
-  StyleSheet,
+  ActivityIndicator,
+  Image,
   Text,
   TextInput,
-  View,
-  Image,
   TouchableOpacity,
-  Button,
-  ActivityIndicator,
+  View,
 } from "react-native";
 import Toast from "react-native-toast-message";
-import { useDispatch, useSelector } from "react-redux";
-import { RootState } from "../redux/store";
-import { setToken } from "../redux/userSlice";
+import { useDispatch } from "react-redux";
+import { setToken } from "../../redux/userSlice";
 
 export default function Login({ navigation }) {
   const [email, setEmail] = React.useState("");
   const [isEmailValid, setIsEmailValid] = React.useState(false);
-  const [emailErrorMessage, setemailErrorMessage] = React.useState(false);
-  const [isLoading, setIsLoading] = React.useState(false);
+
   const [password, setPassword] = React.useState("");
   const [isPasswordValid, setIsPasswordValid] = React.useState(false);
-  const [passwordErrorMessage, setpasswordErrorMessage] = React.useState(false);
+
+  const [isLoading, setIsLoading] = React.useState(false);
+
   const dispatch = useDispatch();
 
-  const validateEmail = (email) => {
+  const validateEmail = (email: string): void => {
     const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     setIsEmailValid(regex.test(email));
   };
 
-  const validatePassword = (password) => {
+  const validatePassword = (password: string): void => {
     setIsPasswordValid(password.length > 0);
   };
 
   const handleLogin = async () => {
     if (isEmailValid && password.length > 0) {
-      try {
-        setIsLoading(true);
-        let token = await axios.post("http://10.0.2.2:9090/login", {
-          email: email,
-          password: password,
+      setIsLoading(true);
+      console.log(password);
+      console.log(email);
+      await LoginUser(email, password)
+        .then((data: any) => {
+          dispatch(setToken(data));
+        })
+        .catch((error) => {
+          console.log(error, "Caught error");
+          Toast.show({
+            type: "error",
+            text1: "Error",
+            text2: `${error} `,
+          });
+        })
+        .finally((): void => {
+          setIsLoading(false);
         });
-
-        dispatch(setToken(token.data.token));
-      } catch (error) {
-        Toast.show({
-          type: "error",
-          text1: "Error",
-          text2: `${error.message} `,
-        });
-        console.log(error.message);
-      } finally {
-        setIsLoading(false);
-      }
     } else {
       alert("Please enter a valid email and password.");
     }
@@ -66,7 +64,7 @@ export default function Login({ navigation }) {
       {/* Logo Image */}
       <Image
         style={styles.image}
-        source={require("../assets/loginImage.png")}
+        source={require("../../assets/loginImage.png")}
       />
       <View style={styles.formContainer}>
         <Text style={styles.textHeader}>Sign in</Text>
@@ -134,67 +132,3 @@ export default function Login({ navigation }) {
   );
 }
 
-//Styling
-const styles = StyleSheet.create({
-  container: {
-    width: "100%",
-    height: "100%",
-    flex: 1,
-    backgroundColor: "#fff",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  formContainer: {
-    width: 300,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  textHeader: {
-    fontSize: 30,
-    fontWeight: "bold",
-    marginBottom: 20,
-  },
-  textLink: {
-    marginTop: 10,
-    fontSize: 14,
-    color: "#0080ff",
-    textDecorationLine: "underline",
-  },
-  input: {
-    height: 50,
-    width: 300,
-    margin: 10,
-    paddingLeft: 20,
-    borderWidth: 1,
-    borderRadius: 10,
-    borderColor: "#ccc",
-    fontSize: 16,
-  },
-  invalidInput: {
-    borderColor: "red",
-  },
-  image: {
-    width: 270,
-    height: 270,
-  },
-  loginButton: {
-    borderColor: "red",
-    borderWidth: 2,
-    padding: 7,
-    paddingHorizontal: 56,
-    textAlign: "center",
-    backgroundColor: "indianred",
-    borderRadius: 4,
-    marginTop: 10,
-  },
-  textButton: {
-    color: "white",
-    fontSize: 16,
-    fontWeight: "bold",
-  },
-  errorMessage: {
-    color: "red",
-    textAlign: "right",
-    marginLeft: "auto",
-  },
-});
