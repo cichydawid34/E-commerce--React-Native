@@ -20,7 +20,7 @@ export default function MainHeader() {
   const [filteredEvents, setFilteredEvents] = useState([]);
   const navigation = useNavigation<NativeStackNavigationProp<any>>();
   const token = useSelector((state: any) => state.user.token);
-  const [filters, setFilters] = useState(null);
+  const [filters, setFilters] = useState([]);
 
   function formatDate(dateString) {
     const options: any = { day: "numeric", month: "long", year: "numeric" };
@@ -43,18 +43,39 @@ export default function MainHeader() {
     fetchData();
   }, []);
 
-  useEffect(() => {
-    setFilteredEvents(events);
-    if (value != null) {
-      setFilteredEvents(events.filter((e) => e.type == value));
-      console.warn(JSON.stringify(filteredEvents));
-      console.error(filteredEvents);
-    }
-  }, [value]);
+  // useEffect(() => {
+  //   setFilteredEvents(events);
+  //   if (value != null) {
+  //     setFilteredEvents(events.filter((e) => e.type == value));
+  //     console.warn(JSON.stringify(filteredEvents));
+  //     console.error(filteredEvents);
+  //   }
+  // }, [value]);
 
   function updateFilters(filter) {
-    // setFilters(filters.push(filter));
+    console.log(filter);
+    let have = false;
+
+    setFilters([filter]);
   }
+
+  useEffect(() => {
+    let array = events;
+    if (filters) {
+      filters.map((filter) => {
+        if (filter.value !== null || filter.value == "") {
+          if (filter.name === "genre") {
+            console.log("filter", array);
+            array = array.filter((event) => event.type == filter.value);
+            console.log("filter2", array);
+          } else if (filter.name === "name") {
+            array = array.filter((event) => event.name.includes(filter.value));
+          }
+        }
+      });
+    }
+    setFilteredEvents(array);
+  }, [filters]);
 
   return (
     <View
@@ -179,7 +200,7 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     marginRight: "auto",
     marginLeft: "auto",
-    marginTop: 8,
+    marginTop: -12,
     marginBottom: 10,
   },
   card: {

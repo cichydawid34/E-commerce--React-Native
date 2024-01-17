@@ -13,6 +13,10 @@ export default function MapScreen() {
   const [location, setLocation] = useState(null);
   const [errorMsg, setErrorMsg] = useState(null);
 
+  function updateFilters(filter) {
+    // setFilters(filters.push(filter));
+  }
+
   useEffect(() => {
     (async () => {
       let { status } = await Location.requestForegroundPermissionsAsync();
@@ -61,7 +65,7 @@ export default function MapScreen() {
           top: 30,
         }}
       >
-        <MainSearchBar />
+        <MainSearchBar updateFilters={updateFilters} />
       </View>
       <MapView
         style={styles.map}

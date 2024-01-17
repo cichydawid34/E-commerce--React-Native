@@ -52,7 +52,7 @@ export default function Navigator() {
 
   return (
     <>
-      {token != null ? (
+      {token == null ? (
         // No token found
         <Stack.Navigator
           screenOptions={{

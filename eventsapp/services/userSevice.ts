@@ -1,9 +1,10 @@
 import axios from "axios";
+import {BASE_URL} from "../constants";
 
 //Register User
 export const RegisterUser = (email: string, password: string) =>
   axios
-    .post("http://192.168.1.189:9090/api/register", {
+    .post(`http://${BASE_URL}:9090/api/register`, {
       email: email,
       password: password,
     })
@@ -17,7 +18,7 @@ export const RegisterUser = (email: string, password: string) =>
 //Login User
 export const LoginUser = (email: string, password: string) =>
   axios
-    .post("http://192.168.1.189:9090/api/login", {
+    .post(`http://${BASE_URL}:9090/api/login`, {
       email: email,
       password: password,
     })

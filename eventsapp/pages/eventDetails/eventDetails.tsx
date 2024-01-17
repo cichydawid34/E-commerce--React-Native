@@ -35,11 +35,12 @@ export default function EventDetails({ route, navigation }) {
         const data = await response.json();
         console.log("Fetched data:", data.event);
         setEvent(data.event);
+        checkFavorite();
       } catch (error) {
         console.error("Error fetching event:", error);
       }
     };
-    checkFavorite();
+
     fetchData();
   }, []);
 
@@ -47,25 +48,31 @@ export default function EventDetails({ route, navigation }) {
     const favorites = await AsyncStorage.getItem("FAVORITES");
     let isFav = false;
     if (favorites) {
-      const array = JSON.parse(favorites);
+      let array = [];
+      array = JSON.parse(favorites);
 
       array.map((x) => {
+        console.log("array here");
+        console.log("array", x);
+        console.log(x.name);
         if (x.name == event.name) {
+          console.log("true");
           isFav = true;
         }
       });
       setIsInFavorites(isFav);
       return isFav;
+    } else {
+      setIsInFavorites(false);
+      return isFav;
     }
-    setIsInFavorites(isFav);
-    return isFav;
   }
 
   async function addToFavorites() {
     const favorites = await AsyncStorage.getItem("FAVORITES");
     console.log(favorites);
+    const items = [];
     if (!favorites) {
-      const items = [];
       items.push(event);
       console.log(items);
       await AsyncStorage.setItem("FAVORITES", JSON.stringify(items));
@@ -97,7 +104,13 @@ export default function EventDetails({ route, navigation }) {
   return (
     <View style={{ flex: 1, alignItems: "center" }}>
       <ScrollView
-        style={{ flex: 1, display: "flex", width: 460, paddingHorizontal: 20 }}
+        style={{
+          flex: 1,
+          display: "flex",
+          width: 460,
+          paddingLeft: 15,
+          paddingRight: 15,
+        }}
       >
         <Image
           style={styles.image}
@@ -106,8 +119,8 @@ export default function EventDetails({ route, navigation }) {
           }}
         />
         <>
-          <Text style={styles.header}>{event.name}</Text>
-
+          <Text style={styles.header}>{event.name} </Text>
+          <Text style={styles.dateEvent}>12.07.2023 Kraków Sukiennicza 24</Text>
           {event.latitude && (
             <View style={styles.mapContainer}>
               <MapView
@@ -131,13 +144,10 @@ export default function EventDetails({ route, navigation }) {
               </MapView>
             </View>
           )}
-
           <Text style={styles.header}>About</Text>
           <Text style={styles.description}>{event.description}</Text>
-          <Text style={styles.dateEvent}>12.07.2023 Kraków Sukiennicza 24</Text>
-
           <Pressable style={styles.button} onPress={addToFavorites}>
-            {isInFavorites ? (
+            {!isInFavorites ? (
               <Text style={styles.text}>Add to Favorites </Text>
             ) : (
               <Text style={styles.text}>Remove from Favorites</Text>
@@ -156,10 +166,11 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   mapContainer: {
-    width: "95%",
+    width: "90%",
     height: 150,
     borderRadius: 30,
     overflow: "hidden",
+    marginLeft: 21,
   },
   map: {
     height: 150,
@@ -200,12 +211,15 @@ const styles = StyleSheet.create({
     width: "90%",
     marginBottom: 12,
     fontSize: 16,
+    marginLeft: 22,
+    backgroundColor: "white",
+    borderRadius: 15,
   },
   dateEvent: {
-    backgroundColor: "indianred",
-    color: "white",
     padding: 2,
     fontSize: 16,
     marginBottom: 8,
+    marginTop: -14,
+    marginLeft: 12,
   },
 });

@@ -6,7 +6,9 @@ import DropDownPicker from "react-native-dropdown-picker";
 export default function SearchBar(props: { updateFilters?(filter) }) {
   const [openGenre, setOpenGenre] = useState(false);
   const [openCity, setOpenCity] = useState(false);
+  const [openDate, setOpenDate] = useState(false);
   const [name, setName] = React.useState("");
+  const [date, setDate] = React.useState("");
   const [genre, setGenre] = React.useState("");
   const [city, setCity] = React.useState("");
 
@@ -27,6 +29,12 @@ export default function SearchBar(props: { updateFilters?(filter) }) {
   useEffect(() => {
     props.updateFilters({ name: "city", value: city });
   }, [city]);
+  useEffect(() => {
+    props.updateFilters({ name: "genre", value: genre });
+  }, [genre]);
+  useEffect(() => {
+    props.updateFilters({ name: "name", value: name });
+  }, [name]);
 
   return (
     <View style={styles.main}>
@@ -71,10 +79,10 @@ export default function SearchBar(props: { updateFilters?(filter) }) {
         <View>
           <DropDownPicker
             style={styles.picker}
-            open={openGenre}
-            setOpen={setOpenGenre}
-            value={genre}
-            setValue={setGenre}
+            open={openDate}
+            setOpen={setOpenDate}
+            value={date}
+            setValue={setDate}
             items={genres}
             placeholder={"Date"}
           />
