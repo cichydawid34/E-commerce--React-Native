@@ -26,7 +26,6 @@ function CustomTabBarIcon({ image, focused }) {
     />
   );
 }
-
 function MainStackScreen() {
   return (
     <Stack.Navigator
@@ -58,6 +57,7 @@ export default function Navigator() {
           screenOptions={{
             headerShown: false,
           }}
+
         >
           <Stack.Screen
             name="Login"
@@ -80,11 +80,13 @@ export default function Navigator() {
             tabBarShowLabel: false,
             headerShown: false,
           }}
+          initialRouteName="Main"
         >
           <Tab.Screen
             name="SplashScr"
             component={SplashScreen}
             options={{
+             unmountOnBlur: true,
               tabBarIcon: ({ focused }) => (
                 <CustomTabBarIcon
                   image={

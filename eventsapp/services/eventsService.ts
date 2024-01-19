@@ -13,3 +13,8 @@ export const getEvents = (token: string) =>
     .catch((error) => {
       throw new Error(error.response.data);
     });
+
+
+
+
+

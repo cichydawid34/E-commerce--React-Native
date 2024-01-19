@@ -7,10 +7,11 @@ export default function SearchBar(props: { updateFilters?(filter) }) {
   const [openGenre, setOpenGenre] = useState(false);
   const [openCity, setOpenCity] = useState(false);
   const [openDate, setOpenDate] = useState(false);
+
   const [name, setName] = React.useState("");
-  const [date, setDate] = React.useState("");
   const [genre, setGenre] = React.useState("");
   const [city, setCity] = React.useState("");
+  const [date, setDate] = React.useState("");
 
   const [genres, setGenres] = useState([
     { label: "Concert", value: "Concert" },
@@ -19,19 +20,21 @@ export default function SearchBar(props: { updateFilters?(filter) }) {
   ]);
 
   const [cities, setCities] = useState([
-    { label: "Tarnów", value: "Tarnówt" },
+    { label: "Tarnów", value: "Tarnów" },
     { label: "Kraków", value: "Kraków" },
     { label: "Rzeszów", value: "Rzeszów" },
     { label: "Łodź", value: "Łódź" },
-    { label: "Gdańsk", value: "Gdańsk" },
     { label: "All", value: null },
   ]);
+
   useEffect(() => {
     props.updateFilters({ name: "city", value: city });
   }, [city]);
+
   useEffect(() => {
     props.updateFilters({ name: "genre", value: genre });
   }, [genre]);
+
   useEffect(() => {
     props.updateFilters({ name: "name", value: name });
   }, [name]);
@@ -115,7 +118,7 @@ const styles = StyleSheet.create({
     width: "100%",
     paddingHorizontal: 20,
     fontSize: 16,
-    height: 30,
+    height: 40,
   },
   icon: {
     width: 10,
