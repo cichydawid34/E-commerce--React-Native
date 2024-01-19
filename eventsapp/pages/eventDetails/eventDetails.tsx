@@ -92,7 +92,6 @@ export default function EventDetails({route, navigation}) {
         } else {
             const favorites = await AsyncStorage.getItem("FAVORITES");
             let array = JSON.parse(favorites) || [];
-
             // Filter the array based on the condition
             let returnArray=[]
             returnArray= array.filter((e) => e._id !== event._id);
@@ -155,7 +154,7 @@ export default function EventDetails({route, navigation}) {
 
                     <Text style={styles.headerDes}>About</Text>
                     <Text style={styles.description}>{event.description}</Text>
-                    <Text style={styles.dateEvent}>12.07.2023 Kraków Sukiennicza 24</Text>
+                    <Text style={styles.dateEvent}>{event.city} {event.street}</Text>
 
                     <Pressable style={styles.button} onPress={addToFavorites}>
                         {!isInFavorites ? (

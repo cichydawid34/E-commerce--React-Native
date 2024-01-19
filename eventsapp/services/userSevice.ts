@@ -1,6 +1,5 @@
 import axios from "axios";
 import {BASE_URL} from "../constants";
-
 //Register User
 export const RegisterUser = (email: string, password: string) =>
   axios
@@ -9,6 +8,7 @@ export const RegisterUser = (email: string, password: string) =>
       password: password,
     })
     .then((response) => {
+        console.log('es',response)
       return response.data;
     })
     .catch((error) => {
@@ -23,10 +23,8 @@ export const LoginUser = (email: string, password: string) =>
       password: password,
     })
     .then((response: any): string => {
-      console.log(response.data.token, "token");
       return response.data.token;
     })
     .catch((error): string => {
-      console.log(error.response.data);
       throw new Error(error.response.data);
     });

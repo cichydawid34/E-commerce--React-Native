@@ -167,7 +167,7 @@ export default function MainHeader() {
                                             style={styles.marker}
                                             source={require("../assets/google-marker.png")}
                                         />
-                                        {event.street}
+                                        {event.city}, {event.street}
                                     </Text>
                                 </View>
                             </TouchableOpacity>
@@ -270,15 +270,16 @@ const styles = StyleSheet.create({
         marginTop: 0,
     },
     stripePlace: {
-        fontSize: 15,
+        fontSize: 13,
         color: "#696969",
-        marginLeft: -3,
+        marginLeft: -2,
         marginTop: 12,
         marginBottom: 8,
     },
     marker: {
         width: 20,
         height: 20,
+        marginRight:2
     },
     scrollView: {
         height: 130,

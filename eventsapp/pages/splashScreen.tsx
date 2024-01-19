@@ -2,10 +2,12 @@ import * as React from "react";
 import {Image, ScrollView, StyleSheet, Text, TouchableOpacity, View} from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import {useEffect} from "react";
+import {useNavigation} from "@react-navigation/native";
+import {NativeStackNavigationProp} from "@react-navigation/native-stack";
 
 export default function SplashScreen() {
     const [events, setEvents] = React.useState(null);
-
+    const navigation = useNavigation<NativeStackNavigationProp<any>>();
     async function getEvents() {
         const favorites = await AsyncStorage.getItem("FAVORITES");
         const array = JSON.parse(favorites);
@@ -69,9 +71,9 @@ export default function SplashScreen() {
                                 return (
                                     <TouchableOpacity
                                         style={styles.stripe}
-                                        // onPress={() =>
-                                        //     // navigation.navigate("EventDetails", { eventId: event._id })
-                                        // }
+                                        onPress={() =>
+                                            navigation.navigate("EventDetails", { eventId: event._id })
+                                         }
                                     >
                                         <Image
                                             style={styles.stripeImage}
