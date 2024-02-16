@@ -13,6 +13,7 @@ import {useSelector} from "react-redux";
 import {BASE_URL} from "../../constants";
 import {useEffect} from "react";
 import {deleteEventService} from "../../services/eventsService";
+import Toast from "react-native-toast-message";
 
 export default function EventDetails({route, navigation}) {
     const [event, setEvent] = React.useState(null);
@@ -83,6 +84,11 @@ export default function EventDetails({route, navigation}) {
     async function deleteEvent(){
     try{
        await deleteEventService(event._id)
+        Toast.show({
+            type: "success",
+            text1: "Success",
+            text2: "You have successfully deleted an event",
+        });
     }
     catch(e){
     }
@@ -135,15 +141,26 @@ export default function EventDetails({route, navigation}) {
                 />
                 <>
                     <Text style={styles.header}>{event.name}</Text>
-                    <Pressable style={styles.button} onPress={deleteEvent}>
+                    <View style={[{display:'flex',flexDirection:'row'}]}>
+                    <Pressable  onPress={deleteEvent} style={[{marginBottom:10}]}>
                     <Image
-                        style={[{height:40,width:40,marginLeft:180}]}
+                        style={[{height:40,width:40,marginLeft:160}]}
                         source={
                              require("../../assets/deleteIcon.png")
                         }
 
                     />
                     </Pressable>
+                    <Pressable  onPress={deleteEvent} style={[{marginBottom:10}]}>
+                        <Image
+                            style={[{height:40,width:40,marginLeft:10}]}
+                            source={
+                                require("../../assets/editIcon.png")
+                            }
+
+                        />
+                    </Pressable>
+                    </View>
 
                     {event.latitude && (
                         <View style={styles.mapContainer}>
@@ -182,6 +199,7 @@ export default function EventDetails({route, navigation}) {
                     </Pressable>
                 </>
             </ScrollView>
+            <Toast />
         </View>
     );
 }
@@ -214,7 +232,7 @@ const styles = StyleSheet.create({
 
     },
     image: {
-        height: 230,
+        height: 160,
         width: "100%",
         borderBottomLeftRadius: 40,
         borderBottomRightRadius: 40,
@@ -241,7 +259,7 @@ const styles = StyleSheet.create({
         fontWeight: "bold",
         marginRight: "auto",
         marginTop: 15,
-        marginLeft: 60,
+        marginLeft: 110,
         marginBottom: 10,
     },
     headerDes: {
@@ -249,7 +267,7 @@ const styles = StyleSheet.create({
         fontWeight: "bold",
         marginRight: "auto",
         marginTop: 10,
-        marginLeft: 167,
+        marginLeft: 'auto',
         marginBottom: 2,
     },
     description: {

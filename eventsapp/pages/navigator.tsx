@@ -39,11 +39,29 @@ function MainStackScreen() {
       <Stack.Screen
         name="Main"
         component={MainScreen}
-        options={{ headerShown: false }}
+        options={{
+          headerShown: false }}
       />
       <Stack.Screen name="EventDetails" component={EventDetails} />
       <Stack.Screen name="AddEventScreen" component={AddEventScreen} />
     </Stack.Navigator>
+  );
+}
+function MapStackScreen() {
+  return (
+      <Stack.Navigator
+          screenOptions={{
+            headerShown: false,
+          }}
+      >
+        <Stack.Screen
+            name="Main"
+            component={MapScreen}
+            options={{
+              headerShown: false }}
+        />
+        <Stack.Screen name="EventDetails" component={EventDetails} />
+      </Stack.Navigator>
   );
 }
 
@@ -68,6 +86,7 @@ export default function Navigator() {
             component={Login}
             options={{
               title: "Sign in",
+
             }}
           />
           <Stack.Screen
@@ -81,6 +100,7 @@ export default function Navigator() {
       ) : (
         <Tab.Navigator
           screenOptions={{
+            unmountOnBlur: true,
             tabBarShowLabel: false,
             headerShown: false,
             tabBarStyle: {
@@ -130,7 +150,7 @@ export default function Navigator() {
           />
           <Tab.Screen
             name="Map"
-            component={MapScreen}
+            component={MapStackScreen}
             options={{
               tabBarIcon: ({ focused }) => (
                 <CustomTabBarIcon

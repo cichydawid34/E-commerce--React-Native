@@ -9,13 +9,13 @@ import DateTimePicker from '@react-native-community/datetimepicker';
 export default function AddEventScreen() {
 
     const [eventName, setEventName] = useState('');
-    const [eventDate, setEventDate] = useState('');
+    const [eventDate, setEventDate] = useState();
     const [eventType, setEventType] = useState('Concert');
     const [eventDescription, setEventDescription] = useState('');
     const [eventLocation, setEventLocation] = useState<any>({});
     const [eventImage, setEventImage] = useState('');
     const [isLoading, setIsLoading] = useState(false);
-    const [date, setDate] = useState(new Date(1598051730000));
+    const [date, setDate] = useState(new Date(1698051730000));
     const [mode, setMode] = useState('date');
     const [show, setShow] = useState(false);
 
@@ -36,7 +36,9 @@ export default function AddEventScreen() {
     const addEvent=async()=>{
         console.log('loc',eventLocation)
         console.log('loccity',eventLocation.address_components)
-        console.log('date',eventDate)
+        console.log('date',date)
+        console.log('date',new Date(date))
+
         const newEvent ={
             name:eventName,
             type:eventType,
@@ -45,7 +47,8 @@ export default function AddEventScreen() {
             longitude:eventLocation.geometry.location.lng,
             city:eventLocation.vicinity,
             street:eventLocation.name,
-            date:eventDate
+            startDate:new Date(date),
+            image:eventImage
         }
         console.log(newEvent)
         try {
@@ -196,6 +199,7 @@ export default function AddEventScreen() {
                 )}
             </TouchableOpacity>
             </View>
+            <Toast />
         </View>
     );
 }

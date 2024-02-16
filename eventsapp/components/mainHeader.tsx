@@ -1,5 +1,5 @@
 import * as React from "react";
-import {useState} from "react";
+import {useEffect, useState} from "react";
 import {
     Image,
     ScrollView,
@@ -13,7 +13,7 @@ import {useSelector} from "react-redux";
 import MainSearchBar from "./mainSearchBar";
 import {NativeStackNavigationProp} from "@react-navigation/native-stack";
 import {getEvents} from "../services/eventsService";
-
+import { useIsFocused } from '@react-navigation/native';
 export default function MainHeader() {
     const [events, setEvents] = useState([]);
     const [suggestedEvents, setSuggestedEvents] = useState([]);
@@ -27,20 +27,27 @@ export default function MainHeader() {
         ]
     );
     var def = 'https://media.istockphoto.com/id/1409329028/vector/no-picture-available-placeholder-thumbnail-icon-illustration-design.jpg?s=612x612&w=0&k=20&c=_zOuJu755g2eEUioiOUdz_mHKJQJn-tDgIAhQzyeKUQ=';
-
+    const isFocused = useIsFocused();
     function formatDate(dateString) {
         const options: any = {day: "numeric", month: "long", year: "numeric"};
         const date = new Date(dateString);
         return date.toLocaleDateString("en-US", options);
     }
 
+
+
+
+    useEffect(() => {
+        isFocused && fetchData()
+    },[isFocused]);
+
     const fetchData = async () => {
         getEvents(token)
             .then((data) => {
                 console.log(data.events);
                 setEvents(data.events);
-                setSuggestedEvents(data.events);
-                setFilteredEvents(data.events.filter((event) => event.isPromoted !== true));
+                setFilteredEvents(data.events);
+                setSuggestedEvents(data.events.filter((event) => event.isPromoted !== true));
             })
             .catch((error) => {
                 console.error("Error fetching events:", error);
@@ -113,6 +120,24 @@ export default function MainHeader() {
                                 }}
                             />
                             <Text style={styles.cardTitle}>Lady Pank</Text>
+                        </View>
+                        <View style={styles.card}>
+                            <Image
+                                style={styles.cardImage}
+                                source={{
+                                    uri: "https://logohistory.net/wp-content/uploads/2023/07/Metallica-Logo.png",
+                                }}
+                            />
+                            <Text style={styles.cardTitle}>Metallica</Text>
+                        </View>
+                        <View style={styles.card}>
+                            <Image
+                                style={styles.cardImage}
+                                source={{
+                                    uri: "https://i.ytimg.com/vi/tH6me6_JHK4/maxresdefault.jpg",
+                                }}
+                            />
+                            <Text style={styles.cardTitle}>Dżem</Text>
                         </View>
                     </ScrollView>
                 </View>
@@ -188,8 +213,8 @@ export default function MainHeader() {
 const styles = StyleSheet.create({
     addEventButton: {
         position: "absolute",
-        bottom: 60,
-        left: 125,
+        bottom: 65,
+        left: 170,
         zIndex: 10,
         elevation: 10,
     },
