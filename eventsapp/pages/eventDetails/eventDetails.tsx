@@ -12,6 +12,7 @@ import MapView, {Marker} from "react-native-maps";
 import {useSelector} from "react-redux";
 import {BASE_URL} from "../../constants";
 import {useEffect} from "react";
+import {deleteEventService} from "../../services/eventsService";
 
 export default function EventDetails({route, navigation}) {
     const [event, setEvent] = React.useState(null);
@@ -79,6 +80,13 @@ export default function EventDetails({route, navigation}) {
         setIsInFavorites(isFav);
         return isFav;
     }
+    async function deleteEvent(){
+    try{
+       await deleteEventService(event._id)
+    }
+    catch(e){
+    }
+    }
 
     async function addToFavorites() {
         if (!isInFavorites) {
@@ -127,6 +135,15 @@ export default function EventDetails({route, navigation}) {
                 />
                 <>
                     <Text style={styles.header}>{event.name}</Text>
+                    <Pressable style={styles.button} onPress={deleteEvent}>
+                    <Image
+                        style={[{height:40,width:40,marginLeft:180}]}
+                        source={
+                             require("../../assets/deleteIcon.png")
+                        }
+
+                    />
+                    </Pressable>
 
                     {event.latitude && (
                         <View style={styles.mapContainer}>

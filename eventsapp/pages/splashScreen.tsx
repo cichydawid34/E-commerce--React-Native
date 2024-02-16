@@ -49,7 +49,7 @@ export default function SplashScreen() {
                         flex: 1,
                         alignItems: "center",
                         justifyContent: "center",
-                        marginTop:40
+                        marginTop:3
                     }}
                 >
                     <Text style={{
@@ -128,7 +128,7 @@ const styles = StyleSheet.create({
         fontWeight: "bold",
         marginRight: "auto",
         marginLeft: "auto",
-        marginTop: 8,
+        marginTop: 0,
         marginBottom: 10,
     },
     card: {

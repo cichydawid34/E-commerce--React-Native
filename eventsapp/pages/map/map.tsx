@@ -104,7 +104,7 @@ export default function MapScreen() {
                 style={{
                     position: "absolute",
                     zIndex: 2,
-                    top: 30,
+                    top: 10,
                 }}
             >
                 <View style={styles.searchBar}>
@@ -150,7 +150,7 @@ const styles = StyleSheet.create({
         width: "100%",
         height: "100%",
     }, searchBar: {
-        marginTop: 40
+        marginTop: 10
     }
 
 });

@@ -109,7 +109,7 @@ export default function Login({ navigation }) {
         <TouchableOpacity onPress={() => navigation.navigate("Register")}>
           <Text
             style={styles.textLink}
-            onPress={() => navigation.navigate("Register")}
+            //onPress={() => navigation.navigate("Register")}
           >
             Don't have an account?
           </Text>
