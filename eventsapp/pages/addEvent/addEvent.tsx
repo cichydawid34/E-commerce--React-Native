@@ -2,11 +2,11 @@ import {Picker} from '@react-native-picker/picker';
 import React, {useEffect, useRef, useState} from 'react';
 import {View, Text, TextInput, StyleSheet, TouchableOpacity, ActivityIndicator, Button} from 'react-native';
 import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
-import {addEventService} from "../../services/eventsService";
+import {addEventService, updateEventService} from "../../services/eventsService";
 import Toast from "react-native-toast-message";
 import DateTimePicker from '@react-native-community/datetimepicker';
 
-export default function AddEventScreen() {
+export default function AddEventScreen({route, navigation}) {
 
     const [eventName, setEventName] = useState('');
     const [eventDate, setEventDate] = useState();
@@ -18,13 +18,27 @@ export default function AddEventScreen() {
     const [date, setDate] = useState(new Date(1698051730000));
     const [mode, setMode] = useState('date');
     const [show, setShow] = useState(false);
+    const [isEditing, setIsEditing] = useState(false);
 
     const onChange = (event, selectedDate) => {
+
         const currentDate = selectedDate;
         setShow(false);
         setDate(currentDate);
     };
+    useEffect(() => {
+        const params = route?.params;
 
+        if(params?.event){
+           const eventt= params?.event
+            setEventDescription(eventt.description)
+            setEventName(eventt.name)
+            setEventType(eventt.type)
+            setDate(eventt.startDate)
+            setEventImage(eventt.image)
+            setEventLocation(eventt.city)
+        }
+    }, []);
     const showMode = (currentMode) => {
         setShow(true);
         setMode(currentMode);
@@ -34,11 +48,24 @@ export default function AddEventScreen() {
         showMode('date');
     };
     const addEvent=async()=>{
-        console.log('loc',eventLocation)
-        console.log('loccity',eventLocation.address_components)
-        console.log('date',date)
-        console.log('date',new Date(date))
-
+        const params = route?.params;
+        const eventt= params?.event
+        if(params){
+            const newEvent ={
+                name:eventName,
+                type:eventType,
+                description:eventDescription,
+                startDate:new Date(date),
+                image:eventImage
+            }
+            await updateEventService("test",newEvent,eventt._id).then(()=>{
+                Toast.show({
+                    type: "success",
+                    text1: "Success",
+                    text2: "You have successfully updated an event",
+                });
+            })
+        }
         const newEvent ={
             name:eventName,
             type:eventType,
@@ -145,7 +172,7 @@ export default function AddEventScreen() {
                 }}
                 fetchDetails={true}
                 query={{
-                    key: 'AIzaSyDeZlHAHX3GfgKkPy1LwGLXVNXq8Mo43Yw',
+
                     language: 'en',
                 }}
             />
@@ -195,7 +222,7 @@ export default function AddEventScreen() {
                 {isLoading ? (
                     <ActivityIndicator size="small" color="white"/>
                 ) : (
-                    <Text style={styles.textButton} >Add Event</Text>
+                    <Text style={styles.textButton} >{!route?.params?'Add Event':'Update Event'}</Text>
                 )}
             </TouchableOpacity>
             </View>

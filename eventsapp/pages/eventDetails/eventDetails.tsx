@@ -151,7 +151,9 @@ export default function EventDetails({route, navigation}) {
 
                     />
                     </Pressable>
-                    <Pressable  onPress={deleteEvent} style={[{marginBottom:10}]}>
+                    <Pressable  onPress={() =>
+                        navigation.navigate("AddEventScreen", {event: event,})
+                    } >
                         <Image
                             style={[{height:40,width:40,marginLeft:10}]}
                             source={

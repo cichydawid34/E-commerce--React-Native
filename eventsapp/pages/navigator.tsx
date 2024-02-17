@@ -47,6 +47,23 @@ function MainStackScreen() {
     </Stack.Navigator>
   );
 }
+function EventDetailsStackScreen() {
+  return (
+      <Stack.Navigator
+          screenOptions={{
+            headerShown: false,
+          }}
+      >
+        <Stack.Screen
+            name="EventDetails"
+            component={EventDetails}
+            options={{
+              headerShown: false }}
+        />
+        <Stack.Screen name="AddEventScreen" component={AddEventScreen} />
+      </Stack.Navigator>
+  );
+}
 function MapStackScreen() {
   return (
       <Stack.Navigator
