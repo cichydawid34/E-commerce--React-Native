@@ -144,7 +144,7 @@ export default function EventDetails({route, navigation}) {
                     <View style={[{display:'flex',flexDirection:'row'}]}>
                     <Pressable  onPress={deleteEvent} style={[{marginBottom:10}]}>
                     <Image
-                        style={[{height:40,width:40,marginLeft:160}]}
+                        style={[{height:40,width:40,marginLeft:155}]}
                         source={
                              require("../../assets/deleteIcon.png")
                         }
@@ -261,7 +261,7 @@ const styles = StyleSheet.create({
         fontWeight: "bold",
         marginRight: "auto",
         marginTop: 15,
-        marginLeft: 110,
+        marginLeft: 135,
         marginBottom: 10,
     },
     headerDes: {
